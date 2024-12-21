@@ -21,7 +21,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, BitsAn
 import torch
 from llava_icd.model import *
 from llava_icd.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
-
+import sys
 
 def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda", use_flash_attn=False, **kwargs):
     kwargs = {"device_map": device_map, **kwargs}
@@ -86,7 +86,6 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             print('Model is loaded...')
         elif model_base is not None:
             # this may be mm projector only
-            print('Loading LLaVA from base model...')
             if 'mpt' in model_name.lower():
                 if not os.path.isfile(os.path.join(model_path, 'configuration_mpt.py')):
                     shutil.copyfile(os.path.join(model_base, 'configuration_mpt.py'), os.path.join(model_path, 'configuration_mpt.py'))
@@ -113,12 +112,17 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                     **kwargs
                 )
             else:
+                config = AutoConfig.from_pretrained(model_path)
+                config.mm_vision_tower="/mnt/data/users/liamding/data/LLAVA-2/clip-vit-large-patch14-336"
                 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
                 model = LlavaLlamaForCausalLM.from_pretrained(
                     model_path,
+                    config=config,
                     low_cpu_mem_usage=True,
                     **kwargs
                 )
+                model.config.mm_vision_tower="/mnt/data/users/liamding/data/LLAVA-2/clip-vit-large-patch14-336"
+                print("success")
     else:
         # Load language model
         if model_base is not None:
