@@ -295,22 +295,25 @@ if __name__ == "__main__":
 
     log_prob = False
     # icd, lcd, licd, vcd, vicd, vlicd, sd, sicd, slicd, vlcd
-    # cds = ["", "icd","lcd", "licd", "vcd", "vicd", "vlicd", "mcd_r", "mcd_ir"] 
-    # cds = ["", "icd","lcd", "licd"] 
+    # cds = ["", "icd","lcd", "licd", "vcd", "vicd", "vlicd"] 
+    cds = ["", "icd","lcd", "licd"] 
+    # cds = ["vcd", "vicd", "vlicd"] 
     # cds = ["imcd_r", "limcd_r","imcd_ir", "limcd_ir", "vlimcd_r", "vlimcd_ir"]
     # cds = ["mcd_r", "imcd_r", "limcd_r", "vlimcd_r"]
     # cds = ["mcd_r", "imcd_r"]
-    cds = ["limcd_r", "vlimcd_r"]
-    per_relevents = [0.1, 0.08, 0.06, 0.05, 0.04, 0.02, 0]
+    # cds = ["limcd_r", "vlimcd_r"]
+    # per_relevents = [0.1, 0.08, 0.06, 0.05, 0.04, 0.02, 0]
+    per_relevents = [1]
     for pr in per_relevents:
         for cd in cds:
-            output_path = f"{args.output_path}{cd}/"
+            output_path = f"{args.output_path}/"
             Path(output_path).mkdir(parents=True, exist_ok=True)
             # cd = cd+f"_{str(pr).replace('.','')}"
             if cd !="":
-                output_name = f"{str(pr).replace('.','')}.json"
+                # output_name = f"{str(pr).replace('.','')}.json"
+                output_name = f"{cd}.json"
             else:
                 output_name = "original.json"
-            print(cd)
+            print(output_name)
             eval_model()
 
