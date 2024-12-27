@@ -116,16 +116,16 @@ def cal_each_metrics(predicts, answers):
 
 
 if __name__ == "__main__":
-    # data_file = "evaluations/multi30k/no_am/normal"
-    data_file = "/ltstorage/home/2pan/MMMT/evaluations/3am/no_am-outsource/normal"
+    data_file = "evaluations/multi30k/no_am_victx"
+    # data_file = "/ltstorage/home/2pan/MMMT/evaluations/3am/no_am_victx/normal"
     data_path = Path(data_file)
-    target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
-    # target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
+    # target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
+    target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
     with open(target_file, "r", encoding="utf-8") as f:
         target = f.readlines()
     for file in data_path.rglob("*.json"):
-        # if os.path.exists(file.with_name(file.stem + "_total.csv")):
-        #     continue
+        if os.path.exists(file.with_name(file.stem + "_total.csv")):
+            continue
         print(file)
         data = json.load(open(file, "r", encoding="utf-8"))
         # bleu = BLEU()
