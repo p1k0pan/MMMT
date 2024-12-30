@@ -10,8 +10,8 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 import os
-# bert_name = "bert-base-chinese"
-bert_name = "bert-base-multilingual-cased"
+bert_name = "bert-base-chinese"
+# bert_name = "bert-base-multilingual-cased"
 tokenizer = AutoTokenizer.from_pretrained(bert_name)
 def bleu_score(predict, answer):
     """
@@ -20,8 +20,8 @@ def bleu_score(predict, answer):
            ]
     sys = ['The dog bit the man.', "It wasn't surprising.", 'The man had just bitten him.']
     """
-    # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101")
-    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="13a")
+    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101")
+    # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="13a")
     return bleu.score
 
 def chrf_score(predict, answer):
@@ -33,8 +33,8 @@ def ter_score(predict, answer):
     return ter.score
 
 def bertscore(predict, answer):
-    # P, R, F1 = score(predict, answer, model_type = bert_name, device="cuda")
-    P, R, F1 = score(predict, answer, lang="de", device="cuda")
+    P, R, F1 = score(predict, answer, model_type = bert_name, device="cuda")
+    # P, R, F1 = score(predict, answer, lang="de", device="cuda")
     return torch.mean(P).item(), torch.mean(R).item(), torch.mean(F1).item()
 
 def meteor(predict, answer, type):
@@ -116,11 +116,12 @@ def cal_each_metrics(predicts, answers):
 
 
 if __name__ == "__main__":
-    data_file = "evaluations/multi30k/no_am_victx"
+    data_file = "evaluations/msctd/no_am/mcd_r"
     # data_file = "/ltstorage/home/2pan/MMMT/evaluations/3am/no_am_victx/normal"
     data_path = Path(data_file)
     # target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
-    target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
+    # target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
+    target_file = "/ltstorage/home/2pan/MSCTD_data/enzh/chinese_test.txt"
     with open(target_file, "r", encoding="utf-8") as f:
         target = f.readlines()
     for file in data_path.rglob("*.json"):
