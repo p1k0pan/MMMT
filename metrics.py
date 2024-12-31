@@ -10,9 +10,12 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 import os
-# bert_name = "bert-base-chinese"
-bert_name = "bert-base-multilingual-cased"
-tokenizer = AutoTokenizer.from_pretrained(bert_name)
+import nltk
+nltk.data.path.append('/mnt/data/users/liamding/data/LLAVA-2')
+bert_name = "bert-base-chinese"
+# bert_name = "/mnt/data/users/liamding/data/LLAVA-2/bert-base-chinese/"
+tokenizer = AutoTokenizer.from_pretrained(bert_name, trust_remote_code=True)
+print("load tokenizer")
 def bleu_score(predict, answer):
     """
     refs = [ 
@@ -20,8 +23,8 @@ def bleu_score(predict, answer):
            ]
     sys = ['The dog bit the man.', "It wasn't surprising.", 'The man had just bitten him.']
     """
-    # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101")
-    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="13a")
+    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101") #for chinese
+    # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="13a")
     return bleu.score
 
 def chrf_score(predict, answer):
@@ -33,8 +36,8 @@ def ter_score(predict, answer):
     return ter.score
 
 def bertscore(predict, answer):
-    # P, R, F1 = score(predict, answer, model_type = bert_name)
-    P, R, F1 = score(predict, answer, lang="de")
+    P, R, F1 = score(predict, answer, model_type = bert_name, device='cuda') #chinese
+    # P, R, F1 = score(predict, answer, lang="de")
     return torch.mean(P).item(), torch.mean(R).item(), torch.mean(F1).item()
 
 def meteor(predict, answer, type):
@@ -116,15 +119,18 @@ def cal_each_metrics(predicts, answers):
 
 
 if __name__ == "__main__":
-    data_file = "/ltstorage/home/2pan/LLaVA/evaluations/multi30k/no_am/2016"
+    # data_file = "evaluations/3am/no_am_victx/normal"
+    data_file = "evaluations/msctd/no_am/vlimcd_r"
+
     data_path = Path(data_file)
-    # target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
-    target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
+    # target_file = "/mnt/data/users/liamding/data/3AM/3AM/data/test.zh"
+    # target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
+    target_file = "/mnt/data/users/liamding/data/MSCTD/MSCTD_data/enzh/chinese_test.txt"
     with open(target_file, "r", encoding="utf-8") as f:
         target = f.readlines()
-    for file in data_path.rglob("v*.json"):
-        # if os.path.exists(file.with_name(file.stem + "_total.csv")):
-        #     continue
+    for file in data_path.rglob("*.json"):
+        if os.path.exists(file.with_name(file.stem + "_total.csv")):
+            continue
         print(file)
         data = json.load(open(file, "r", encoding="utf-8"))
         # bleu = BLEU()
