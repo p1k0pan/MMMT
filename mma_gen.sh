@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python cd_gen_mma.py  --output_path evaluations/mma/no_am/
