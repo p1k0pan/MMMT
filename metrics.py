@@ -20,7 +20,8 @@ def bleu_score(predict, answer):
            ]
     sys = ['The dog bit the man.', "It wasn't surprising.", 'The man had just bitten him.']
     """
-    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101")
+    # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="flores101")
+    bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="zh")
     # bleu = sacrebleu.corpus_bleu(predict, answer, lowercase=True, tokenize="13a")
     return bleu.score
 
@@ -116,12 +117,12 @@ def cal_each_metrics(predicts, answers):
 
 
 if __name__ == "__main__":
-    data_file = "evaluations/msctd/no_am/mcd_r"
-    # data_file = "/ltstorage/home/2pan/MMMT/evaluations/3am/no_am_victx/normal"
+    # data_file = "evaluations/msctd/no_am/mcd_r"
+    data_file = "/ltstorage/home/2pan/MMMT/evaluations/3am_qwen2vl/no_cd_update_outsource/normal_zh_tok"
     data_path = Path(data_file)
-    # target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
+    target_file = "/ltstorage/home/2pan/dataset/3AM/data/test.zh"
     # target_file = "/ltstorage/home/2pan/dataset/multi30k/data/task1/test/test_2016_flickr.de"
-    target_file = "/ltstorage/home/2pan/MSCTD_data/enzh/chinese_test.txt"
+    # target_file = "/ltstorage/home/2pan/MSCTD_data/enzh/chinese_test.txt"
     with open(target_file, "r", encoding="utf-8") as f:
         target = f.readlines()
     for file in data_path.rglob("*.json"):

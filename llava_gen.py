@@ -203,6 +203,8 @@ def generate(text, image_file, prompt_temp, tg):
         output_ids, log_sentence_prob = model.generate(
             input_ids,
             attention_mask = attention_mask,
+            # images=None,
+            # image_sizes=None,
             images=images_tensor,
             image_sizes=image_sizes,
             do_sample=True if args.temperature > 0 else False,
@@ -274,6 +276,8 @@ if __name__ == "__main__":
     tokenizer, model, image_processor, context_len = load_pretrained_model(
         args.model_path, args.model_base, model_name, device_map="auto"
     )
+    print(model)
+    sys.exit()
 
     source_file = args.source_file
     with open(source_file, "r", encoding="utf-8") as f:
@@ -301,9 +305,10 @@ if __name__ == "__main__":
     # cds = ["imcd_r", "limcd_r","imcd_ir", "limcd_ir", "vlimcd_r", "vlimcd_ir"]
     # cds = ["mcd_r", "imcd_r", "limcd_r", "vlimcd_r"]
     # cds = ["mcd_r", "imcd_r"]
-    cds = ["limcd_r", "vlimcd_r"]
-    per_relevents = [0.1, 0.08, 0.06, 0.05, 0.04, 0.02, 0]
-    # per_relevents = [1]
+    # cds = ["limcd_r", "vlimcd_r"]
+    cds = [""]
+    # per_relevents = [0.1, 0.08, 0.06, 0.05, 0.04, 0.02, 0]
+    per_relevents = [1]
     for pr in per_relevents:
         for cd in cds:
             output_path = f"{args.output_path}{cd}"
