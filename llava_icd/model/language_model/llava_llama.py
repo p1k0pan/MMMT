@@ -147,8 +147,8 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 inputs_embeds,
                 _,
                 image_position
-            # ) = self.prepare_inputs_labels_for_multimodal(
-            ) = self.prepare_inputs_labels_for_text(
+            ) = self.prepare_inputs_labels_for_multimodal(
+            # ) = self.prepare_inputs_labels_for_text(
                 inputs,
                 position_ids,
                 attention_mask,

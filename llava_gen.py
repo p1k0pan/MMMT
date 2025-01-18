@@ -225,7 +225,7 @@ def generate(text, image_file, prompt_temp, tg):
     return outputs, log_sentence_prob
 
 
-def eval_model():
+def eval_model(msctd=False):
     results = []
     
     for id, ti in enumerate(tzip(source, img_source, target)):
@@ -233,7 +233,10 @@ def eval_model():
         img = ti[1].strip()
         tg = ti[2].strip()
 
-        outputs, log_sentence_prob = generate(text, image_folder+img, prompt_temp, tg)
+        if msctd:
+            outputs, log_sentence_prob = generate(text, image_folder+f"{id}.jpg", prompt_temp, tg)
+        else:
+            outputs, log_sentence_prob = generate(text, image_folder+img, prompt_temp, tg)
         results.append({"id":id, "source": text, "target": outputs, "log_sentence_prob": log_sentence_prob})
 
     json.dump(results, open(output_path + output_name, "w", encoding="utf-8"), ensure_ascii=False, indent=4)
@@ -299,14 +302,14 @@ if __name__ == "__main__":
 
     log_prob = False
     # icd, lcd, licd, vcd, vicd, vlicd, sd, sicd, slicd, vlcd
-    # cds = ["", "icd","lcd", "licd", "vcd", "vicd", "vlicd"] 
+    cds = ["", "icd","lcd", "licd", "vcd", "vicd", "vlicd"] 
     # cds = ["", "icd","lcd", "licd"] 
     # cds = ["vcd", "vicd", "vlicd"] 
     # cds = ["imcd_r", "limcd_r","imcd_ir", "limcd_ir", "vlimcd_r", "vlimcd_ir"]
     # cds = ["mcd_r", "imcd_r", "limcd_r", "vlimcd_r"]
     # cds = ["mcd_r", "imcd_r"]
     # cds = ["limcd_r", "vlimcd_r"]
-    cds = [""]
+    # cds = [""]
     # per_relevents = [0.1, 0.08, 0.06, 0.05, 0.04, 0.02, 0]
     per_relevents = [1]
     for pr in per_relevents:
